@@ -20,7 +20,8 @@ def init_db() -> None:
             CREATE TABLE IF NOT EXISTS Shorten(
                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                 code TEXT UNIQUE NOT NULL,
-                original_url TEXT NOT NULL
+                original_url TEXT NOT NULL,
+                clicks INTEGER DEFAULT 0
             )
             """
         )

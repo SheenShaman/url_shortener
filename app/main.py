@@ -66,9 +66,34 @@ def redirect_url(code: str):
         if row is None:
             logger.warning("Short url not found", extra={"code": code})
             raise HTTPException(status_code=404, detail="URl not found")
+        conn.execute(
+            "UPDATE Shorten SET clicks = clicks + 1 WHERE code = ?",
+            (code,),
+        )
+        conn.commit()
         logger.info(
             "Redirect",
             extra={"code": code, "target": row["original_url"]},
         )
 
         return RedirectResponse(url=row["original_url"])
+
+
+@app.get("/stats/{code}")
+def get_stats(code: str):
+    """
+    Возвращает количество переходов
+    """
+    with get_connection() as conn:
+        row = conn.execute(
+            "SELECT clicks FROM Shorten WHERE code = ?",
+            (code,),
+        ).fetchone()
+
+        if row is None:
+            raise HTTPException(status_code=404, detail="URL not found")
+
+        return {
+            "code": code,
+            "clicks": row["clicks"]
+        }
