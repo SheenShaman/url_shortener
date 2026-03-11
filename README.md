@@ -27,6 +27,7 @@
 - poetry install
 - uvicorn app.main:app --reload
 - pytest (для тестирования)
+- pytest -v (запуск тестов)
 
 ## Запуск через Docker
 - docker compose up --build
